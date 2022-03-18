@@ -32,6 +32,7 @@
  
 #define IVF_FILE_HDR_SZ  (32)
 #define IVF_FRAME_HDR_SZ (12)
+#define USE_RED true
  
 static void mem_put_le16(char *mem, unsigned int val) {
     mem[0] = val;
@@ -99,16 +100,24 @@ int main(int argc, char **argv) {
     vpx_image_t raw;
     vpx_codec_err_t ret;
     int width,height;
-	int y_size;
+	int y_size, yuv_size;
     int frame_avail;
     int got_data;
     int flags = 0;
  
-    width = 640;
-    height = 360;
+    if (USE_RED) {
+        width = 960;
+        height = 560;
+        infile = fopen("../red.yuv", "rb");
+        outfile = fopen("red.ivf", "wb");
+    }
+    else {
+        width = 640;
+        height = 360;
+        infile = fopen("../cuc_ieschool_640x360_yuv420p.yuv", "rb");
+        outfile = fopen("cuc_ieschool_640x360_yuv420p.ivf", "wb");
+    }
 
-	infile = fopen("../cuc_ieschool_640x360_yuv420p.yuv", "rb");
-	outfile = fopen("cuc_ieschool.ivf", "wb");
 
 	if(infile==NULL||outfile==NULL){
 		printf("Error open files.\n");
@@ -145,12 +154,13 @@ int main(int argc, char **argv) {
     got_data = 0;
 
 	y_size=cfg.g_w*cfg.g_h;
+    yuv_size = y_size * 3 / 2;
 
     while(frame_avail || got_data) {
         vpx_codec_iter_t iter = NULL;
         const vpx_codec_cx_pkt_t *pkt;
 		
-		if(fread(raw.planes[0], 1, y_size*3/2, infile)!=y_size*3/2){
+		if(fread(raw.planes[0], 1, yuv_size, infile)!= yuv_size){
 			frame_avail=0;
 		}
 
