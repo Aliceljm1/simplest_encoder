@@ -6,3 +6,7 @@ encoder_sourcecode/
 #过滤
 *.sdf
 *.vs
+
+#特殊大文件，可用命令行自己转码
+10s.yuv
+

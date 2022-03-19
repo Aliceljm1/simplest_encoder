@@ -32,7 +32,7 @@
  
 #define IVF_FILE_HDR_SZ  (32)
 #define IVF_FRAME_HDR_SZ (12)
-#define USE_RED true
+#define USE_RED false
  
 static void mem_put_le16(char *mem, unsigned int val) {
     mem[0] = val;
@@ -112,10 +112,10 @@ int main(int argc, char **argv) {
         outfile = fopen("red.ivf", "wb");
     }
     else {
-        width = 640;
-        height = 360;
-        infile = fopen("../cuc_ieschool_640x360_yuv420p.yuv", "rb");
-        outfile = fopen("cuc_ieschool_640x360_yuv420p.ivf", "wb");
+        width = 1280;
+        height = 720;
+        infile = fopen("../10s.yuv", "rb");
+        outfile = fopen("10s_vp8.ivf", "wb");
     }
 
 
